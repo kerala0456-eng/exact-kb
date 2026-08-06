@@ -1,260 +1,125 @@
-"use client";
+import type { Metadata } from "next";
 
-import { FormEvent, useState } from "react";
+export const metadata: Metadata = {
+  title: "Contact",
+  description:
+    "Contact ExactKB for questions, feedback, technical issues or suggestions.",
+};
 
 export default function ContactPage() {
-  const [submitted, setSubmitted] = useState(false);
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    setSubmitted(true);
-  }
-
   return (
     <main className="min-h-screen bg-[#faf9fc] text-[#211b2b]">
 
-      {/* Header */}
-      <header className="border-b border-[#ebe6f2] bg-white">
+      <header className="border-b border-[#ebe5f0] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
 
           <a
             href="/"
-            className="text-2xl font-black tracking-tight"
+            className="text-2xl font-black"
           >
             Exact<span className="text-violet-600">KB</span>
           </a>
 
           <a
             href="/"
-            className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-violet-700"
+            className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white"
           >
-            Back to Tool
+            Home
           </a>
 
         </div>
       </header>
 
-      {/* Content */}
-      <section className="px-5 py-14 sm:py-20">
-
-        <div className="mx-auto max-w-4xl">
+      <section className="px-5 py-20">
+        <div className="mx-auto max-w-3xl">
 
           <div className="text-center">
 
-            <p className="text-sm font-black uppercase tracking-[0.25em] text-violet-600">
+            <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-600">
               Contact
             </p>
 
-            <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
-              Get in touch
+            <h1 className="mt-4 text-4xl font-black sm:text-5xl">
+              We'd love to hear from you
             </h1>
 
-            <p className="mx-auto mt-5 max-w-2xl leading-7 text-[#766d7e]">
-              Have a question, suggestion, feedback, or found
-              a problem with ExactKB? Send us a message.
+            <p className="mx-auto mt-6 max-w-2xl leading-7 text-[#766d80]">
+              Have a question about ExactKB, found a problem or have
+              a suggestion? Contact us and provide as much useful
+              information as possible.
             </p>
 
           </div>
 
-          <div className="mt-12 grid gap-6 md:grid-cols-5">
+          <div className="mt-12 rounded-3xl border border-[#ebe5f0] bg-white p-7 shadow-sm sm:p-9">
 
-            {/* Info */}
-            <div className="md:col-span-2">
+            <h2 className="text-2xl font-black">
+              Email us
+            </h2>
 
-              <div className="h-full rounded-2xl border border-[#e8e1ef] bg-white p-7 shadow-sm">
+            <p className="mt-4 leading-7 text-[#766d80]">
+              For questions, feedback, technical issues and other
+              enquiries, please email:
+            </p>
 
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-100 text-xl">
-                  💬
-                </div>
+            <a
+              href="mailto:support@exactkb.com"
+              className="mt-5 inline-block break-all text-lg font-black text-violet-600"
+            >
+              supportexactkb@gmail.com
+            </a>
 
-                <h2 className="mt-6 text-xl font-black">
-                  We would love to hear from you
-                </h2>
-
-                <p className="mt-3 leading-7 text-[#766d7e]">
-                  Your feedback helps us improve ExactKB and
-                  build useful tools for everyone.
-                </p>
-
-                <div className="mt-8 space-y-4">
-
-                  <div className="rounded-xl bg-[#faf8fd] p-4">
-
-                    <p className="text-xs font-bold uppercase tracking-wide text-[#9a91a1]">
-                      Website
-                    </p>
-
-                    <p className="mt-1 font-bold">
-                      ExactKB
-                    </p>
-
-                  </div>
-
-                  <div className="rounded-xl bg-[#faf8fd] p-4">
-
-                    <p className="text-xs font-bold uppercase tracking-wide text-[#9a91a1]">
-                      Response
-                    </p>
-
-                    <p className="mt-1 font-bold">
-                      We aim to respond as soon as possible.
-                    </p>
-
-                  </div>
-
-                </div>
-
-              </div>
-
+            <div className="mt-8 rounded-2xl bg-violet-50 p-5 text-sm leading-6 text-[#6f6578]">
+              When reporting a technical problem, please include the
+              type of device, browser and a short description of what
+              happened. Do not send passwords, payment information or
+              other sensitive personal information.
             </div>
 
-            {/* Form */}
-            <div className="md:col-span-3">
+          </div>
 
-              <div className="rounded-2xl border border-[#e8e1ef] bg-white p-7 shadow-sm">
+          <div className="mt-6 grid gap-5 sm:grid-cols-2">
 
-                {submitted ? (
+            <div className="rounded-2xl border border-[#ebe5f0] bg-white p-6">
+              <h3 className="font-black">
+                Technical issue
+              </h3>
 
-                  <div className="py-12 text-center">
+              <p className="mt-2 text-sm leading-6 text-[#83798b]">
+                Tell us what you were trying to do and what happened.
+              </p>
+            </div>
 
-                    <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-3xl text-emerald-600">
-                      ✓
-                    </div>
+            <div className="rounded-2xl border border-[#ebe5f0] bg-white p-6">
+              <h3 className="font-black">
+                Feedback
+              </h3>
 
-                    <h2 className="mt-5 text-2xl font-black">
-                      Message received
-                    </h2>
-
-                    <p className="mx-auto mt-3 max-w-md leading-7 text-[#766d7e]">
-                      Thank you for contacting ExactKB.
-                      Your message has been prepared successfully.
-                    </p>
-
-                    <button
-                      onClick={() => setSubmitted(false)}
-                      className="mt-7 rounded-xl bg-violet-600 px-6 py-3 font-bold text-white transition hover:bg-violet-700"
-                    >
-                      Send another message
-                    </button>
-
-                  </div>
-
-                ) : (
-
-                  <form onSubmit={handleSubmit}>
-
-                    <h2 className="text-xl font-black">
-                      Send us a message
-                    </h2>
-
-                    <div className="mt-6 space-y-5">
-
-                      <div>
-
-                        <label
-                          htmlFor="name"
-                          className="mb-2 block text-sm font-bold"
-                        >
-                          Name
-                        </label>
-
-                        <input
-                          id="name"
-                          name="name"
-                          type="text"
-                          required
-                          placeholder="Your name"
-                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-3.5 outline-none transition placeholder:text-[#b0a7b5] focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
-                        />
-
-                      </div>
-
-                      <div>
-
-                        <label
-                          htmlFor="email"
-                          className="mb-2 block text-sm font-bold"
-                        >
-                          Email
-                        </label>
-
-                        <input
-                          id="email"
-                          name="email"
-                          type="email"
-                          required
-                          placeholder="you@example.com"
-                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-3.5 outline-none transition placeholder:text-[#b0a7b5] focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
-                        />
-
-                      </div>
-
-                      <div>
-
-                        <label
-                          htmlFor="subject"
-                          className="mb-2 block text-sm font-bold"
-                        >
-                          Subject
-                        </label>
-
-                        <input
-                          id="subject"
-                          name="subject"
-                          type="text"
-                          required
-                          placeholder="How can we help?"
-                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-3.5 outline-none transition placeholder:text-[#b0a7b5] focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
-                        />
-
-                      </div>
-
-                      <div>
-
-                        <label
-                          htmlFor="message"
-                          className="mb-2 block text-sm font-bold"
-                        >
-                          Message
-                        </label>
-
-                        <textarea
-                          id="message"
-                          name="message"
-                          required
-                          rows={6}
-                          placeholder="Write your message..."
-                          className="w-full resize-none rounded-xl border border-[#e2dce8] bg-white px-4 py-3.5 outline-none transition placeholder:text-[#b0a7b5] focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
-                        />
-
-                      </div>
-
-                      <button
-                        type="submit"
-                        className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-6 py-4 font-black text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl"
-                      >
-                        Send Message
-                      </button>
-
-                    </div>
-
-                  </form>
-
-                )}
-
-              </div>
-
+              <p className="mt-2 text-sm leading-6 text-[#83798b]">
+                Suggestions that can make ExactKB more useful are
+                always welcome.
+              </p>
             </div>
 
           </div>
 
         </div>
-
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-[#ebe5f0] bg-white px-5 py-8 text-center text-sm text-[#968c9d]">
-        © 2026 ExactKB. All rights reserved.
+      <footer className="border-t border-[#ebe5f0] bg-white px-5 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 text-sm text-[#8d8492] sm:flex-row sm:items-center sm:justify-between">
+
+          <p>
+            © 2026 ExactKB. All rights reserved.
+          </p>
+
+          <div className="flex gap-5">
+            <a href="/">Home</a>
+            <a href="/privacy-policy">Privacy</a>
+            <a href="/terms">Terms</a>
+          </div>
+
+        </div>
       </footer>
 
     </main>

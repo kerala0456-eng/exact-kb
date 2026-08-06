@@ -1,117 +1,147 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About",
+  description:
+    "Learn about ExactKB, a simple online image compression tool for reducing JPG, PNG and WebP image sizes.",
+};
+
 export default function AboutPage() {
   return (
     <main className="min-h-screen bg-[#faf9fc] text-[#211b2b]">
 
-      <header className="border-b border-[#ebe6f2] bg-white">
+      <header className="border-b border-[#ebe5f0] bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-5">
-
           <a
             href="/"
-            className="text-2xl font-black tracking-tight"
+            className="text-2xl font-black"
           >
             Exact<span className="text-violet-600">KB</span>
           </a>
 
           <a
             href="/"
-            className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-violet-700"
+            className="rounded-xl bg-violet-600 px-5 py-2.5 text-sm font-bold text-white"
           >
-            Back to Tool
+            Image Compressor
           </a>
-
         </div>
       </header>
 
-      <section className="px-5 py-16 sm:py-24">
-
-        <div className="mx-auto max-w-3xl">
+      <section className="px-5 py-20">
+        <div className="mx-auto max-w-4xl">
 
           <div className="text-center">
-
-            <p className="text-sm font-black uppercase tracking-[0.25em] text-violet-600">
+            <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-600">
               About ExactKB
             </p>
 
-            <h1 className="mt-4 text-4xl font-black tracking-tight sm:text-5xl">
-              Simple image compression
-              <span className="block text-violet-600">
-                for everyone.
-              </span>
+            <h1 className="mt-4 text-4xl font-black sm:text-5xl">
+              A simple way to reduce image file size
             </h1>
 
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#786f80]">
-              ExactKB is a simple online image compression
-              tool designed to help people reduce image file
-              sizes quickly and easily.
+            <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-[#766d80]">
+              ExactKB is an online image compression tool created to
+              make reducing image file sizes simple and accessible.
             </p>
-
           </div>
 
-          <div className="mt-14 space-y-6">
+          <div className="mt-14 space-y-8">
 
-            <div className="rounded-2xl border border-[#e8e1ef] bg-white p-7 shadow-sm">
-
-              <h2 className="text-xl font-black">
+            <section className="rounded-3xl border border-[#ebe5f0] bg-white p-7 shadow-sm sm:p-9">
+              <h2 className="text-2xl font-black">
                 What is ExactKB?
               </h2>
 
-              <p className="mt-3 leading-7 text-[#766d7e]">
-                ExactKB helps users compress images when they
-                need a smaller file size for applications,
-                websites, forms, documents, email and other
-                online services.
+              <p className="mt-4 leading-7 text-[#766d80]">
+                ExactKB helps users reduce the size of supported image
+                files when they need a smaller file for uploading,
+                sharing or storing.
               </p>
 
-            </div>
+              <p className="mt-4 leading-7 text-[#766d80]">
+                The tool provides preset target sizes and a custom
+                target option so users can choose the approximate file
+                size they need.
+              </p>
+            </section>
 
-            <div className="rounded-2xl border border-[#e8e1ef] bg-white p-7 shadow-sm">
-
-              <h2 className="text-xl font-black">
-                Our goal
+            <section className="rounded-3xl border border-[#ebe5f0] bg-white p-7 shadow-sm sm:p-9">
+              <h2 className="text-2xl font-black">
+                Our approach
               </h2>
 
-              <p className="mt-3 leading-7 text-[#766d7e]">
-                Our goal is to make image compression simple,
-                fast and accessible without requiring users
-                to install complicated software.
+              <p className="mt-4 leading-7 text-[#766d80]">
+                We believe everyday online tools should be easy to
+                understand. ExactKB therefore focuses on a straightforward
+                workflow: choose an image, select a target size, compress
+                it and download the result.
               </p>
+            </section>
 
-            </div>
-
-            <div className="rounded-2xl border border-[#e8e1ef] bg-white p-7 shadow-sm">
-
-              <h2 className="text-xl font-black">
-                Privacy
+            <section className="rounded-3xl border border-[#ebe5f0] bg-white p-7 shadow-sm sm:p-9">
+              <h2 className="text-2xl font-black">
+                Privacy-focused processing
               </h2>
 
-              <p className="mt-3 leading-7 text-[#766d7e]">
-                The current image compression process runs
-                directly in your browser. This means your
-                selected image does not need to be uploaded
-                to our server for the compression process.
+              <p className="mt-4 leading-7 text-[#766d80]">
+                The current image compression process runs directly in
+                the user's browser. This means the compression operation
+                does not require sending the image to a separate
+                compression server.
               </p>
 
-            </div>
+              <p className="mt-4 leading-7 text-[#766d80]">
+                For more information about how the website handles
+                information, please read our Privacy Policy.
+              </p>
 
-          </div>
+              <a
+                href="/privacy-policy"
+                className="mt-5 inline-block font-bold text-violet-600"
+              >
+                Read Privacy Policy →
+              </a>
+            </section>
 
-          <div className="mt-10 text-center">
+            <section className="rounded-3xl border border-[#ebe5f0] bg-white p-7 shadow-sm sm:p-9">
+              <h2 className="text-2xl font-black">
+                Contact ExactKB
+              </h2>
 
-            <a
-              href="/"
-              className="inline-flex rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-7 py-3.5 font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5"
-            >
-              Compress an Image
-            </a>
+              <p className="mt-4 leading-7 text-[#766d80]">
+                If you have a question, notice a problem or want to
+                share feedback about the service, you can contact us
+                through our Contact page.
+              </p>
+
+              <a
+                href="/contact"
+                className="mt-5 inline-block rounded-xl bg-violet-600 px-5 py-3 font-bold text-white"
+              >
+                Contact Us
+              </a>
+            </section>
 
           </div>
 
         </div>
-
       </section>
 
-      <footer className="border-t border-[#ebe5f0] bg-white px-5 py-8 text-center text-sm text-[#968c9d]">
-        © 2026 ExactKB. All rights reserved.
+      <footer className="border-t border-[#ebe5f0] bg-white px-5 py-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-3 text-sm text-[#8d8492] sm:flex-row sm:items-center sm:justify-between">
+
+          <p>
+            © 2026 ExactKB. All rights reserved.
+          </p>
+
+          <div className="flex gap-5">
+            <a href="/privacy-policy">Privacy</a>
+            <a href="/terms">Terms</a>
+            <a href="/contact">Contact</a>
+          </div>
+
+        </div>
       </footer>
 
     </main>

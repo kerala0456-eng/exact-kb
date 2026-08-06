@@ -350,7 +350,120 @@ export default function Home() {
       : 0;
 
   return (
-    <main className="min-h-screen bg-[#faf9fc] text-[#211b2b]">
+    <main className="min-h-screen overflow-hidden bg-[#faf9fc] text-[#211b2b]">
+
+      {/* ANIMATION STYLES */}
+
+      <style jsx global>{`
+        @keyframes exactFadeUp {
+          from {
+            opacity: 0;
+            transform: translateY(24px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes exactFadeIn {
+          from {
+            opacity: 0;
+          }
+
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes exactFloat {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+
+          50% {
+            transform: translateY(-8px);
+          }
+        }
+
+        @keyframes exactGlow {
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.55;
+          }
+
+          50% {
+            transform: scale(1.12);
+            opacity: 0.8;
+          }
+        }
+
+        @keyframes exactSpin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes exactResult {
+          from {
+            opacity: 0;
+            transform: translateY(18px) scale(0.98);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        .exact-fade-up {
+          animation: exactFadeUp 0.7s ease-out both;
+        }
+
+        .exact-fade-up-delay-1 {
+          animation: exactFadeUp 0.7s 0.12s ease-out both;
+        }
+
+        .exact-fade-up-delay-2 {
+          animation: exactFadeUp 0.7s 0.24s ease-out both;
+        }
+
+        .exact-fade-in {
+          animation: exactFadeIn 0.8s ease-out both;
+        }
+
+        .exact-float {
+          animation: exactFloat 3s ease-in-out infinite;
+        }
+
+        .exact-glow {
+          animation: exactGlow 5s ease-in-out infinite;
+        }
+
+        .exact-result {
+          animation: exactResult 0.5s ease-out both;
+        }
+
+        .exact-spinner {
+          animation: exactSpin 0.9s linear infinite;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .exact-fade-up,
+          .exact-fade-up-delay-1,
+          .exact-fade-up-delay-2,
+          .exact-fade-in,
+          .exact-float,
+          .exact-glow,
+          .exact-result,
+          .exact-spinner {
+            animation: none !important;
+          }
+        }
+      `}</style>
 
       {/* HEADER */}
 
@@ -360,7 +473,7 @@ export default function Home() {
 
           <a
             href="/"
-            className="flex items-center gap-3"
+            className="flex items-center gap-3 transition hover:scale-[1.02]"
           >
 
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-lg font-black text-white shadow-lg shadow-violet-200">
@@ -422,19 +535,21 @@ export default function Home() {
 
       <section className="relative overflow-hidden px-5 pb-10 pt-16 sm:pt-24">
 
-        <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-violet-100/70 blur-[100px]" />
+        <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-violet-100/70 blur-[100px] exact-glow" />
+
+        <div className="pointer-events-none absolute left-[10%] top-32 -z-0 h-32 w-32 rounded-full bg-fuchsia-100/60 blur-3xl exact-glow" />
 
         <div className="relative z-10 mx-auto max-w-4xl text-center">
 
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700">
+          <div className="exact-fade-up mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700">
 
-            <span className="h-2 w-2 rounded-full bg-violet-500" />
+            <span className="h-2 w-2 animate-pulse rounded-full bg-violet-500" />
 
             Fast • Private • Simple
 
           </div>
 
-          <h1 className="text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+          <h1 className="exact-fade-up-delay-1 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
 
             Compress Images to
 
@@ -446,7 +561,7 @@ export default function Home() {
 
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-7 text-[#746b7d] sm:text-lg">
+          <p className="exact-fade-up-delay-2 mx-auto mt-6 max-w-2xl text-base leading-7 text-[#746b7d] sm:text-lg">
 
             Reduce JPG, PNG and WebP images to your required
             KB size. No registration, no software installation,
@@ -465,7 +580,7 @@ export default function Home() {
 
         <div className="mx-auto max-w-3xl">
 
-          <div className="rounded-[30px] border border-[#e8e1f0] bg-white p-2 shadow-[0_25px_80px_rgba(83,53,112,0.12)]">
+          <div className="exact-fade-up-delay-2 rounded-[30px] border border-[#e8e1f0] bg-white p-2 shadow-[0_25px_80px_rgba(83,53,112,0.12)] transition duration-500 hover:shadow-[0_30px_100px_rgba(83,53,112,0.18)]">
 
             <div className="rounded-[24px] border border-[#eee9f4] bg-[#fdfcff] p-5 sm:p-8">
 
@@ -480,14 +595,14 @@ export default function Home() {
                     setIsDragging(false)
                   }
                   onDrop={handleDrop}
-                  className={`rounded-2xl border-2 border-dashed px-5 py-16 text-center transition sm:py-20 ${
+                  className={`rounded-2xl border-2 border-dashed px-5 py-16 text-center transition duration-300 sm:py-20 ${
                     isDragging
-                      ? "border-violet-500 bg-violet-50"
+                      ? "scale-[1.01] border-violet-500 bg-violet-50"
                       : "border-[#ddd5e7] bg-[#faf8fd] hover:border-violet-300 hover:bg-violet-50/50"
                   }`}
                 >
 
-                  <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-100 to-fuchsia-100 text-4xl shadow-inner">
+                  <div className="exact-float mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-100 to-fuchsia-100 text-4xl shadow-inner">
                     🖼️
                   </div>
 
@@ -505,7 +620,7 @@ export default function Home() {
                     onClick={() =>
                       fileInputRef.current?.click()
                     }
-                    className="mt-7 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-8 py-4 font-bold text-white shadow-lg shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-xl"
+                    className="mt-7 rounded-xl bg-gradient-to-r from-violet-600 to-fuchsia-500 px-8 py-4 font-bold text-white shadow-lg shadow-violet-200 transition duration-300 hover:-translate-y-1 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
                   >
                     Choose Image
                   </button>
@@ -536,11 +651,11 @@ export default function Home() {
 
                   {/* FILE */}
 
-                  <div className="flex flex-col gap-4 rounded-2xl border border-[#ebe5f1] bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between">
+                  <div className="flex flex-col gap-4 rounded-2xl border border-[#ebe5f1] bg-white p-4 shadow-sm transition duration-300 hover:shadow-md sm:flex-row sm:items-center sm:justify-between">
 
                     <div className="flex min-w-0 items-center gap-4">
 
-                      <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-xl">
+                      <div className="exact-float flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-xl">
                         📷
                       </div>
 
@@ -561,7 +676,7 @@ export default function Home() {
 
                     <button
                       onClick={reset}
-                      className="rounded-lg border border-[#e5dfea] bg-white px-4 py-2 text-sm font-semibold text-[#6f6578] transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
+                      className="rounded-lg border border-[#e5dfea] bg-white px-4 py-2 text-sm font-semibold text-[#6f6578] transition duration-300 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
                     >
                       Change
                     </button>
@@ -596,7 +711,7 @@ export default function Home() {
                             setCustomKB("");
                             setResult(null);
                           }}
-                          className={`rounded-xl border px-4 py-3 text-sm font-bold transition ${
+                          className={`rounded-xl border px-4 py-3 text-sm font-bold transition duration-300 hover:-translate-y-0.5 ${
                             !customKB &&
                             targetKB === size.value
                               ? "border-violet-500 bg-violet-600 text-white shadow-lg shadow-violet-200"
@@ -630,7 +745,7 @@ export default function Home() {
                             setResult(null);
                           }}
                           placeholder="Enter size, e.g. 150"
-                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-4 pr-16 outline-none transition placeholder:text-[#b0a7b5] focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-4 pr-16 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
                         />
 
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-[#aaa1b0]">
@@ -649,11 +764,17 @@ export default function Home() {
                   <button
                     onClick={handleCompress}
                     disabled={isCompressing}
-                    className="mt-8 w-full rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 px-6 py-4 font-black text-white shadow-xl shadow-violet-200 transition hover:-translate-y-0.5 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-60"
+                    className="mt-8 flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 px-6 py-4 font-black text-white shadow-xl shadow-violet-200 transition duration-300 hover:-translate-y-1 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-60"
                   >
+
+                    {isCompressing && (
+                      <span className="exact-spinner h-5 w-5 rounded-full border-2 border-white/30 border-t-white" />
+                    )}
+
                     {isCompressing
                       ? "Compressing your image..."
                       : `Compress Image to ${selectedKB} KB`}
+
                   </button>
 
 
@@ -670,7 +791,7 @@ export default function Home() {
 
                   {result && (
 
-                    <div className="mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+                    <div className="exact-result mt-6 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
 
                       <div className="text-center">
 
@@ -722,7 +843,7 @@ export default function Home() {
 
                           <button
                             onClick={downloadImage}
-                            className="mt-6 rounded-xl bg-emerald-600 px-8 py-3.5 font-black text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-0.5 hover:bg-emerald-700"
+                            className="mt-6 rounded-xl bg-emerald-600 px-8 py-3.5 font-black text-white shadow-lg shadow-emerald-200 transition duration-300 hover:-translate-y-1 hover:bg-emerald-700 hover:shadow-xl active:scale-[0.98]"
                           >
                             Download Image
                           </button>
@@ -757,7 +878,7 @@ export default function Home() {
 
         <div className="mx-auto max-w-5xl">
 
-          <div className="mx-auto max-w-2xl text-center">
+          <div className="mx-auto max-w-2xl text-center exact-fade-up">
 
             <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-600">
               Why ExactKB
@@ -776,58 +897,44 @@ export default function Home() {
 
           <div className="mt-12 grid gap-5 sm:grid-cols-3">
 
-            <div className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-7 text-center transition hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-100">
+            {[
+              {
+                icon: "⚡",
+                title: "Lightning Fast",
+                text: "Your image is compressed directly in your browser.",
+              },
+              {
+                icon: "🔒",
+                title: "Private by Design",
+                text: "Your image stays on your device during browser-based compression.",
+              },
+              {
+                icon: "🎯",
+                title: "Choose Your Size",
+                text: "Select a preset target or enter your own custom KB size.",
+              },
+            ].map((feature) => (
 
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-2xl">
-                ⚡
+              <div
+                key={feature.title}
+                className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-7 text-center transition duration-300 hover:-translate-y-2 hover:border-violet-200 hover:shadow-xl hover:shadow-violet-100"
+              >
+
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-2xl transition duration-300 group-hover:scale-110 group-hover:rotate-3">
+                  {feature.icon}
+                </div>
+
+                <h3 className="mt-5 font-black">
+                  {feature.title}
+                </h3>
+
+                <p className="mt-2 text-sm leading-6 text-[#83798b]">
+                  {feature.text}
+                </p>
+
               </div>
 
-              <h3 className="mt-5 font-black">
-                Lightning Fast
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-[#83798b]">
-                Your image is compressed directly
-                in your browser.
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-7 text-center transition hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-100">
-
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-fuchsia-100 text-2xl">
-                🔒
-              </div>
-
-              <h3 className="mt-5 font-black">
-                Private by Design
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-[#83798b]">
-                Your image stays on your device during
-                browser-based compression.
-              </p>
-
-            </div>
-
-
-            <div className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-7 text-center transition hover:-translate-y-1 hover:shadow-xl hover:shadow-violet-100">
-
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-purple-100 text-2xl">
-                🎯
-              </div>
-
-              <h3 className="mt-5 font-black">
-                Choose Your Size
-              </h3>
-
-              <p className="mt-2 text-sm leading-6 text-[#83798b]">
-                Select a preset target or enter
-                your own custom KB size.
-              </p>
-
-            </div>
+            ))}
 
           </div>
 
@@ -874,9 +981,12 @@ export default function Home() {
             ].map(
               ([number, title, description]) => (
 
-                <div key={number}>
+                <div
+                  key={number}
+                  className="group transition duration-300 hover:-translate-y-2"
+                >
 
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-600 font-black text-white shadow-lg shadow-violet-200">
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-600 font-black text-white shadow-lg shadow-violet-200 transition duration-300 group-hover:scale-110 group-hover:shadow-xl">
                     {number}
                   </div>
 
@@ -923,7 +1033,7 @@ export default function Home() {
 
           <div className="mt-10 space-y-4">
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
+            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
 
               <summary className="cursor-pointer list-none font-black">
                 Is ExactKB free?
@@ -937,7 +1047,7 @@ export default function Home() {
             </details>
 
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
+            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
 
               <summary className="cursor-pointer list-none font-black">
                 Are my images uploaded to a server?
@@ -951,7 +1061,7 @@ export default function Home() {
             </details>
 
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
+            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
 
               <summary className="cursor-pointer list-none font-black">
                 What image formats are supported?
@@ -965,7 +1075,7 @@ export default function Home() {
             </details>
 
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
+            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
 
               <summary className="cursor-pointer list-none font-black">
                 Can I choose a custom KB size?
@@ -993,8 +1103,6 @@ export default function Home() {
 
           <div className="grid gap-10 sm:grid-cols-2 md:grid-cols-4">
 
-            {/* BRAND */}
-
             <div>
 
               <a
@@ -1011,8 +1119,6 @@ export default function Home() {
 
             </div>
 
-
-            {/* TOOL */}
 
             <div>
 
@@ -1055,8 +1161,6 @@ export default function Home() {
             </div>
 
 
-            {/* COMPANY */}
-
             <div>
 
               <h3 className="text-sm font-black">
@@ -1083,8 +1187,6 @@ export default function Home() {
 
             </div>
 
-
-            {/* LEGAL */}
 
             <div>
 
@@ -1114,8 +1216,6 @@ export default function Home() {
 
           </div>
 
-
-          {/* BOTTOM */}
 
           <div className="mt-10 flex flex-col gap-3 border-t border-[#e8e2ed] pt-6 text-sm text-[#968c9d] sm:flex-row sm:items-center sm:justify-between">
 

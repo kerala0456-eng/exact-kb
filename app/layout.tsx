@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   },
 
   description:
-    "Free online image compressor to reduce JPG, PNG and WebP images to 50KB, 100KB, 200KB, 500KB, 1MB or a custom KB size. Fast, simple and private.",
+    "ExactKB is a free online image compressor that helps you reduce JPG, PNG and WebP images to a target KB size. Choose a preset size or enter a custom target.",
 
   keywords: [
     "image compressor",
@@ -59,7 +59,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "ExactKB – Compress Images to Exact KB Size",
     description:
-      "Compress JPG, PNG and WebP images to your required KB size. Choose 50KB, 100KB, 200KB, 500KB, 1MB or a custom size.",
+      "Compress JPG, PNG and WebP images to a target KB size with ExactKB.",
     url: "https://exact-kb-ten.vercel.app/",
     siteName: "ExactKB",
     type: "website",
