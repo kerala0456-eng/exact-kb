@@ -3,61 +3,50 @@
 import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
 
-type QrSize = 256 | 512 | 1024;
-
 export default function QRCodePage() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const [text, setText] = useState("");
-  const [qrSize, setQrSize] = useState<QrSize>(512);
-  const [foreground, setForeground] = useState("#000000");
-  const [background, setBackground] = useState("#ffffff");
+  const [qrGenerated, setQrGenerated] = useState(false);
   const [error, setError] = useState("");
-  const [generated, setGenerated] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   async function generateQR() {
-    if (!text.trim()) {
-      setError("Please enter a URL or text first.");
-      setGenerated(false);
+    const value = text.trim();
+
+    if (!value) {
+      setError("Please enter text or a URL first.");
+      setQrGenerated(false);
       return;
     }
 
-    const canvas = canvasRef.current;
-
-    if (!canvas) {
-      return;
-    }
+    setError("");
+    setIsGenerating(true);
 
     try {
-      setError("");
-
-      await QRCode.toCanvas(canvas, text.trim(), {
-        width: qrSize,
-        margin: 3,
-        errorCorrectionLevel: "H",
+      await QRCode.toCanvas(canvasRef.current, value, {
+        width: 320,
+        margin: 2,
+        errorCorrectionLevel: "M",
         color: {
-          dark: foreground,
-          light: background,
+          dark: "#211b2b",
+          light: "#ffffff",
         },
       });
 
-      setGenerated(true);
+      setQrGenerated(true);
     } catch {
       setError("Unable to generate QR code. Please try again.");
-      setGenerated(false);
+      setQrGenerated(false);
+    } finally {
+      setIsGenerating(false);
     }
   }
-
-  useEffect(() => {
-    if (text.trim()) {
-      generateQR();
-    }
-  }, [qrSize, foreground, background]);
 
   function downloadQR() {
     const canvas = canvasRef.current;
 
-    if (!canvas || !generated) {
+    if (!canvas || !qrGenerated) {
       return;
     }
 
@@ -71,10 +60,23 @@ export default function QRCodePage() {
     link.remove();
   }
 
+  async function copyText() {
+    if (!text.trim()) {
+      setError("There is nothing to copy.");
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      setError("Unable to copy text.");
+    }
+  }
+
   function clearAll() {
     setText("");
     setError("");
-    setGenerated(false);
+    setQrGenerated(false);
 
     const canvas = canvasRef.current;
 
@@ -87,10 +89,16 @@ export default function QRCodePage() {
     }
   }
 
+  useEffect(() => {
+    if (!text.trim()) {
+      setQrGenerated(false);
+    }
+  }, [text]);
+
   return (
     <main className="min-h-screen overflow-hidden bg-[#faf9fc] text-[#211b2b]">
 
-      {/* ANIMATIONS */}
+      {/* ANIMATION */}
 
       <style jsx global>{`
         @keyframes qrFadeUp {
@@ -98,6 +106,7 @@ export default function QRCodePage() {
             opacity: 0;
             transform: translateY(24px);
           }
+
           to {
             opacity: 1;
             transform: translateY(0);
@@ -119,24 +128,30 @@ export default function QRCodePage() {
           0%,
           100% {
             transform: scale(1);
-            opacity: 0.5;
+            opacity: 0.45;
           }
 
           50% {
             transform: scale(1.12);
-            opacity: 0.8;
+            opacity: 0.75;
           }
         }
 
-        @keyframes qrPop {
+        @keyframes qrSpin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
+        @keyframes qrResult {
           from {
             opacity: 0;
-            transform: scale(0.92);
+            transform: scale(0.96) translateY(15px);
           }
 
           to {
             opacity: 1;
-            transform: scale(1);
+            transform: scale(1) translateY(0);
           }
         }
 
@@ -144,12 +159,8 @@ export default function QRCodePage() {
           animation: qrFadeUp 0.7s ease-out both;
         }
 
-        .qr-delay-1 {
-          animation-delay: 0.12s;
-        }
-
-        .qr-delay-2 {
-          animation-delay: 0.24s;
+        .qr-fade-delay {
+          animation: qrFadeUp 0.7s 0.15s ease-out both;
         }
 
         .qr-float {
@@ -160,15 +171,21 @@ export default function QRCodePage() {
           animation: qrGlow 5s ease-in-out infinite;
         }
 
-        .qr-pop {
-          animation: qrPop 0.45s ease-out both;
+        .qr-result {
+          animation: qrResult 0.5s ease-out both;
+        }
+
+        .qr-spinner {
+          animation: qrSpin 0.8s linear infinite;
         }
 
         @media (prefers-reduced-motion: reduce) {
           .qr-fade-up,
+          .qr-fade-delay,
           .qr-float,
           .qr-glow,
-          .qr-pop {
+          .qr-result,
+          .qr-spinner {
             animation: none !important;
           }
         }
@@ -209,17 +226,17 @@ export default function QRCodePage() {
           <nav className="hidden items-center gap-8 text-sm font-medium text-[#766d80] md:flex">
 
             <a
-              href="#how-it-works"
-              className="transition hover:text-violet-600"
-            >
-              How It Works
-            </a>
-
-            <a
               href="#features"
               className="transition hover:text-violet-600"
             >
               Features
+            </a>
+
+            <a
+              href="#how-it-works"
+              className="transition hover:text-violet-600"
+            >
+              How It Works
             </a>
 
             <a
@@ -245,30 +262,32 @@ export default function QRCodePage() {
 
         <div className="pointer-events-none absolute left-1/2 top-0 -z-0 h-[450px] w-[700px] -translate-x-1/2 rounded-full bg-violet-100/70 blur-[100px] qr-glow" />
 
+        <div className="pointer-events-none absolute left-[10%] top-40 -z-0 h-32 w-32 rounded-full bg-fuchsia-100/60 blur-3xl qr-glow" />
+
         <div className="relative z-10 mx-auto max-w-4xl text-center">
 
           <div className="qr-fade-up mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700">
 
             <span className="h-2 w-2 animate-pulse rounded-full bg-violet-500" />
 
-            Fast • Private • Free
+            Fast • Free • Private
 
           </div>
 
-          <h1 className="qr-fade-up qr-delay-1 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
+          <h1 className="qr-fade-up text-4xl font-black leading-tight tracking-tight sm:text-6xl">
 
-            Create a QR Code
+            Generate QR Codes
 
             <span className="block bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 bg-clip-text text-transparent">
-              in Seconds
+              Instantly & Easily
             </span>
 
           </h1>
 
-          <p className="qr-fade-up qr-delay-2 mx-auto mt-6 max-w-2xl text-base leading-7 text-[#746b7d] sm:text-lg">
+          <p className="qr-fade-delay mx-auto mt-6 max-w-2xl text-base leading-7 text-[#746b7d] sm:text-lg">
 
-            Generate a free QR code for websites, text,
-            links and more. Customize the colors and
+            Create a free QR code from any text, website URL,
+            contact information or message. Generate and
             download your QR code instantly.
 
           </p>
@@ -277,243 +296,207 @@ export default function QRCodePage() {
 
       </section>
 
-      {/* QR TOOL */}
+      {/* QR GENERATOR */}
 
       <section className="relative z-10 px-5 pb-24">
 
-        <div className="mx-auto max-w-5xl">
+        <div className="mx-auto max-w-4xl">
 
           <div className="rounded-[30px] border border-[#e8e1f0] bg-white p-2 shadow-[0_25px_80px_rgba(83,53,112,0.12)]">
 
-            <div className="grid gap-8 rounded-[24px] border border-[#eee9f4] bg-[#fdfcff] p-5 sm:p-8 lg:grid-cols-2">
+            <div className="rounded-[24px] border border-[#eee9f4] bg-[#fdfcff] p-5 sm:p-8">
 
-              {/* LEFT */}
+              <div className="grid gap-8 md:grid-cols-2">
 
-              <div>
+                {/* INPUT */}
 
                 <div>
 
-                  <label className="text-sm font-black">
-                    Enter URL or text
-                  </label>
+                  <div className="mb-5">
 
-                  <textarea
-                    value={text}
-                    onChange={(event) => {
-                      setText(event.target.value);
-                      setError("");
-                      setGenerated(false);
-                    }}
-                    placeholder="https://example.com"
-                    rows={5}
-                    className="mt-3 w-full resize-none rounded-2xl border border-[#e2dce8] bg-white px-4 py-4 text-sm outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
-                  />
+                    <div className="mb-2 flex items-center justify-between">
 
-                  <p className="mt-2 text-xs text-[#968c9d]">
-                    Enter a website URL, message or any text
-                    you want to encode.
-                  </p>
+                      <label className="text-sm font-black">
+                        Enter text or URL
+                      </label>
 
-                </div>
+                      <span className="text-xs font-semibold text-[#aaa1b0]">
+                        {text.length}/2000
+                      </span>
 
-                {/* SIZE */}
+                    </div>
 
-                <div className="mt-7">
+                    <textarea
+                      value={text}
+                      maxLength={2000}
+                      onChange={(event) => {
+                        setText(event.target.value);
+                        setError("");
+                        setQrGenerated(false);
+                      }}
+                      placeholder="https://example.com"
+                      rows={8}
+                      className="w-full resize-none rounded-2xl border border-[#e2dce8] bg-white px-4 py-4 text-sm outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                    />
 
-                  <label className="text-sm font-black">
-                    QR Code Size
-                  </label>
+                  </div>
 
-                  <div className="mt-3 grid grid-cols-3 gap-3">
+                  {/* QUICK EXAMPLES */}
 
-                    {[
-                      {
-                        label: "Small",
-                        value: 256 as QrSize,
-                      },
-                      {
-                        label: "Medium",
-                        value: 512 as QrSize,
-                      },
-                      {
-                        label: "Large",
-                        value: 1024 as QrSize,
-                      },
-                    ].map((size) => (
+                  <div className="mb-6">
+
+                    <p className="mb-3 text-xs font-black uppercase tracking-wider text-[#94899c]">
+                      Quick examples
+                    </p>
+
+                    <div className="flex flex-wrap gap-2">
 
                       <button
-                        key={size.value}
-                        onClick={() => setQrSize(size.value)}
-                        className={`rounded-xl border px-3 py-3 text-sm font-bold transition hover:-translate-y-0.5 ${
-                          qrSize === size.value
-                            ? "border-violet-500 bg-violet-600 text-white shadow-lg shadow-violet-200"
-                            : "border-[#e5dfea] bg-white text-[#71677b] hover:border-violet-300"
-                        }`}
+                        onClick={() => {
+                          setText("https://www.google.com");
+                          setQrGenerated(false);
+                          setError("");
+                        }}
+                        className="rounded-lg border border-[#e5dfea] bg-white px-3 py-2 text-xs font-bold text-[#71677b] transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
                       >
-                        {size.label}
+                        Website
                       </button>
 
-                    ))}
-
-                  </div>
-
-                </div>
-
-                {/* COLORS */}
-
-                <div className="mt-7">
-
-                  <label className="text-sm font-black">
-                    QR Code Colors
-                  </label>
-
-                  <div className="mt-3 grid grid-cols-2 gap-4">
-
-                    <div>
-
-                      <label className="mb-2 block text-xs font-semibold text-[#817787]">
-                        Foreground
-                      </label>
-
-                      <div className="flex items-center gap-3 rounded-xl border border-[#e5dfea] bg-white p-3">
-
-                        <input
-                          type="color"
-                          value={foreground}
-                          onChange={(event) =>
-                            setForeground(event.target.value)
-                          }
-                          className="h-10 w-10 cursor-pointer rounded-lg border-0 bg-transparent"
-                        />
-
-                        <span className="text-sm font-bold">
-                          {foreground}
-                        </span>
-
-                      </div>
-
-                    </div>
-
-                    <div>
-
-                      <label className="mb-2 block text-xs font-semibold text-[#817787]">
-                        Background
-                      </label>
-
-                      <div className="flex items-center gap-3 rounded-xl border border-[#e5dfea] bg-white p-3">
-
-                        <input
-                          type="color"
-                          value={background}
-                          onChange={(event) =>
-                            setBackground(event.target.value)
-                          }
-                          className="h-10 w-10 cursor-pointer rounded-lg border-0 bg-transparent"
-                        />
-
-                        <span className="text-sm font-bold">
-                          {background}
-                        </span>
-
-                      </div>
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-                {/* GENERATE */}
-
-                <button
-                  onClick={generateQR}
-                  className="mt-8 w-full rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 px-6 py-4 font-black text-white shadow-xl shadow-violet-200 transition hover:-translate-y-1 hover:shadow-2xl active:scale-[0.98]"
-                >
-                  Generate QR Code
-                </button>
-
-                {error && (
-
-                  <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm font-semibold text-red-600">
-                    {error}
-                  </div>
-
-                )}
-
-              </div>
-
-              {/* RIGHT */}
-
-              <div className="flex flex-col items-center justify-center rounded-3xl border border-[#ebe5f1] bg-white p-6 shadow-sm sm:p-10">
-
-                <div className="text-center">
-
-                  <p className="text-xs font-black uppercase tracking-[0.2em] text-violet-600">
-                    Preview
-                  </p>
-
-                  <h2 className="mt-2 text-xl font-black">
-                    Your QR Code
-                  </h2>
-
-                </div>
-
-                <div className="qr-float mt-8 flex min-h-[280px] w-full items-center justify-center rounded-3xl border border-[#eee9f4] bg-[#faf8fd] p-5">
-
-                  {!generated ? (
-
-                    <div className="text-center">
-
-                      <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-3xl bg-violet-100 text-4xl">
-                        ▦
-                      </div>
-
-                      <p className="mt-5 text-sm font-semibold text-[#93899b]">
-                        Your QR code will appear here
-                      </p>
-
-                    </div>
-
-                  ) : (
-
-                    <div className="qr-pop rounded-2xl bg-white p-3 shadow-lg">
-
-                      <canvas
-                        ref={canvasRef}
-                        className="h-auto max-w-full"
-                        style={{
-                          width: "100%",
-                          maxWidth: "320px",
+                      <button
+                        onClick={() => {
+                          setText("Hello from ExactKB!");
+                          setQrGenerated(false);
+                          setError("");
                         }}
-                      />
+                        className="rounded-lg border border-[#e5dfea] bg-white px-3 py-2 text-xs font-bold text-[#71677b] transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
+                      >
+                        Text
+                      </button>
 
+                      <button
+                        onClick={() => {
+                          setText("Contact ExactKB");
+                          setQrGenerated(false);
+                          setError("");
+                        }}
+                        className="rounded-lg border border-[#e5dfea] bg-white px-3 py-2 text-xs font-bold text-[#71677b] transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
+                      >
+                        Message
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                  {/* BUTTONS */}
+
+                  <button
+                    onClick={generateQR}
+                    disabled={isGenerating}
+                    className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 px-6 py-4 font-black text-white shadow-xl shadow-violet-200 transition duration-300 hover:-translate-y-1 hover:shadow-2xl disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+
+                    {isGenerating && (
+                      <span className="qr-spinner h-5 w-5 rounded-full border-2 border-white/30 border-t-white" />
+                    )}
+
+                    {isGenerating
+                      ? "Generating..."
+                      : "Generate QR Code"}
+
+                  </button>
+
+                  <button
+                    onClick={clearAll}
+                    className="mt-3 w-full rounded-xl border border-[#e3dce8] bg-white px-6 py-3.5 font-bold text-[#71677b] transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
+                  >
+                    Clear
+                  </button>
+
+                  {error && (
+
+                    <div className="mt-4 rounded-xl border border-red-200 bg-red-50 p-4 text-center text-sm font-semibold text-red-600">
+                      {error}
                     </div>
 
                   )}
 
                 </div>
 
-                {generated && (
+                {/* QR PREVIEW */}
 
-                  <button
-                    onClick={downloadQR}
-                    className="qr-pop mt-7 w-full rounded-xl bg-emerald-600 px-6 py-4 font-black text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-1 hover:bg-emerald-700 hover:shadow-xl active:scale-[0.98]"
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-[#ebe5f1] bg-white p-6">
+
+                  <p className="text-sm font-black">
+                    Your QR Code
+                  </p>
+
+                  <p className="mt-1 text-xs text-[#918797]">
+                    Scan with your phone camera
+                  </p>
+
+                  <div
+                    className={`mt-6 flex min-h-[340px] w-full items-center justify-center rounded-2xl border-2 border-dashed border-[#e5dfea] bg-[#faf9fd] p-4 ${
+                      qrGenerated ? "qr-result" : ""
+                    }`}
                   >
-                    Download QR Code
-                  </button>
 
-                )}
+                    {!qrGenerated ? (
 
-                {generated && (
+                      <div className="text-center">
 
-                  <button
-                    onClick={clearAll}
-                    className="mt-3 text-sm font-bold text-[#817787] transition hover:text-violet-600"
-                  >
-                    Create Another QR Code
-                  </button>
+                        <div className="qr-float mx-auto flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-violet-100 to-fuchsia-100 text-5xl shadow-inner">
+                          ▦
+                        </div>
 
-                )}
+                        <p className="mt-5 font-bold text-[#71677b]">
+                          Your QR code will appear here
+                        </p>
+
+                        <p className="mt-2 text-xs text-[#a29aaf]">
+                          Enter something and click Generate
+                        </p>
+
+                      </div>
+
+                    ) : (
+
+                      <div className="text-center">
+
+                        <div className="rounded-2xl bg-white p-3 shadow-lg">
+
+                          <canvas
+                            ref={canvasRef}
+                            className="mx-auto max-w-full"
+                          />
+
+                        </div>
+
+                        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
+
+                          <button
+                            onClick={downloadQR}
+                            className="rounded-xl bg-emerald-600 px-6 py-3.5 font-black text-white shadow-lg shadow-emerald-200 transition hover:-translate-y-1 hover:bg-emerald-700"
+                          >
+                            Download PNG
+                          </button>
+
+                          <button
+                            onClick={copyText}
+                            className="rounded-xl border border-[#e2dce8] bg-white px-6 py-3.5 font-bold text-[#71677b] transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-700"
+                          >
+                            Copy Text
+                          </button>
+
+                        </div>
+
+                      </div>
+
+                    )}
+
+                  </div>
+
+                </div>
 
               </div>
 
@@ -541,12 +524,12 @@ export default function QRCodePage() {
             </p>
 
             <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-              A simple QR generator
+              A simple QR code generator
             </h2>
 
             <p className="mt-4 text-[#83798b]">
-              Create and download QR codes without
-              complicated settings or registration.
+              Create QR codes without registration,
+              complicated settings or unnecessary steps.
             </p>
 
           </div>
@@ -557,17 +540,17 @@ export default function QRCodePage() {
               {
                 icon: "⚡",
                 title: "Instant Generation",
-                text: "Create QR codes quickly directly in your browser.",
+                text: "Generate a QR code within seconds directly in your browser.",
               },
               {
                 icon: "🔒",
                 title: "Private",
-                text: "Your entered content is processed directly in your browser.",
+                text: "Your text and URLs are processed locally in your browser.",
               },
               {
-                icon: "🎨",
-                title: "Customizable",
-                text: "Choose QR size and foreground and background colors.",
+                icon: "📥",
+                title: "Easy Download",
+                text: "Download your generated QR code as a high-quality PNG image.",
               },
             ].map((feature) => (
 
@@ -576,7 +559,7 @@ export default function QRCodePage() {
                 className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-7 text-center transition duration-300 hover:-translate-y-2 hover:border-violet-200 hover:shadow-xl hover:shadow-violet-100"
               >
 
-                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-2xl transition duration-300 group-hover:scale-110 group-hover:rotate-3">
+                <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-violet-100 text-2xl transition duration-300 group-hover:scale-110">
                   {feature.icon}
                 </div>
 
@@ -608,11 +591,11 @@ export default function QRCodePage() {
         <div className="mx-auto max-w-4xl text-center">
 
           <p className="text-xs font-black uppercase tracking-[0.25em] text-violet-600">
-            How It Works
+            How it works
           </p>
 
           <h2 className="mt-3 text-3xl font-black sm:text-4xl">
-            Create a QR code in three steps
+            Create your QR code in 3 steps
           </h2>
 
           <div className="mt-12 grid gap-8 sm:grid-cols-3">
@@ -621,12 +604,12 @@ export default function QRCodePage() {
               [
                 "01",
                 "Enter Content",
-                "Enter your URL, text or message.",
+                "Enter a URL, text or message.",
               ],
               [
                 "02",
                 "Generate",
-                "Click the generate button to create your QR code.",
+                "Click the Generate QR Code button.",
               ],
               [
                 "03",
@@ -685,54 +668,55 @@ export default function QRCodePage() {
 
           <div className="mt-10 space-y-4">
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
 
               <summary className="cursor-pointer list-none font-black">
-                Is the QR Code Generator free?
+                Is the QR code generator free?
               </summary>
 
               <p className="mt-3 text-sm leading-6 text-[#83798b]">
-                Yes. ExactKB QR Code Generator is free
-                to use without registration.
+                Yes. You can create and download QR codes
+                for free using ExactKB.
               </p>
 
             </details>
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
 
               <summary className="cursor-pointer list-none font-black">
-                What can I use a QR code for?
+                What can I put inside a QR code?
               </summary>
 
               <p className="mt-3 text-sm leading-6 text-[#83798b]">
-                You can create QR codes for websites,
-                URLs, text, messages and other information.
+                You can encode website URLs, text, messages,
+                contact information and other supported text content.
               </p>
 
             </details>
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
 
               <summary className="cursor-pointer list-none font-black">
-                Can I customize the QR code?
+                Are my QR code contents uploaded?
               </summary>
 
               <p className="mt-3 text-sm leading-6 text-[#83798b]">
-                Yes. You can select the QR code size,
-                foreground color and background color.
+                The QR code is generated directly in your browser.
+                Your entered content is not required to be uploaded
+                to a server.
               </p>
 
             </details>
 
-            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5">
 
               <summary className="cursor-pointer list-none font-black">
                 Can I download the QR code?
               </summary>
 
               <p className="mt-3 text-sm leading-6 text-[#83798b]">
-                Yes. Generated QR codes can be downloaded
-                as PNG images.
+                Yes. After generating the QR code, click
+                Download PNG to save it to your device.
               </p>
 
             </details>
@@ -766,13 +750,13 @@ export default function QRCodePage() {
               </a>
 
               <p className="mt-4 max-w-xs text-sm leading-6 text-[#8d8492]">
-                Free online tools for images,
-                QR codes and more.
+                Free online tools for image compression,
+                QR code generation and more.
               </p>
 
             </div>
 
-            {/* TOOL */}
+            {/* TOOLS */}
 
             <div>
 
@@ -872,7 +856,7 @@ export default function QRCodePage() {
             </p>
 
             <p>
-              Fast • Private • Simple
+              Fast • Free • Private
             </p>
 
           </div>
