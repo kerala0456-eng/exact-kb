@@ -11,9 +11,7 @@ const TARGET_SIZES = [
 ];
 
 function formatBytes(bytes: number) {
-  if (bytes < 1024) {
-    return `${bytes} B`;
-  }
+  if (bytes < 1024) return `${bytes} B`;
 
   if (bytes < 1024 * 1024) {
     return `${(bytes / 1024).toFixed(1)} KB`;
@@ -45,11 +43,8 @@ async function compressImage(
   try {
     await new Promise<void>((resolve, reject) => {
       image.onload = () => resolve();
-
-      image.onerror = () => {
+      image.onerror = () =>
         reject(new Error("Unable to read image."));
-      };
-
       image.src = objectUrl;
     });
 
@@ -110,9 +105,7 @@ async function compressImage(
           quality
         );
 
-        if (!blob) {
-          continue;
-        }
+        if (!blob) continue;
 
         if (blob.size <= targetBytes) {
           bestForCanvas = blob;
@@ -221,9 +214,7 @@ export default function Home() {
   function selectFile(
     selectedFile: File | undefined
   ) {
-    if (!selectedFile) {
-      return;
-    }
+    if (!selectedFile) return;
 
     if (!selectedFile.type.startsWith("image/")) {
       setError(
@@ -248,7 +239,6 @@ export default function Home() {
     event: React.DragEvent<HTMLDivElement>
   ) {
     event.preventDefault();
-
     setIsDragging(false);
 
     selectFile(event.dataTransfer.files?.[0]);
@@ -296,9 +286,7 @@ export default function Home() {
   }
 
   function downloadImage() {
-    if (!result) {
-      return;
-    }
+    if (!result) return;
 
     const url =
       URL.createObjectURL(result);
@@ -352,15 +340,12 @@ export default function Home() {
   return (
     <main className="min-h-screen overflow-hidden bg-[#faf9fc] text-[#211b2b]">
 
-      {/* ANIMATION STYLES */}
-
       <style jsx global>{`
         @keyframes exactFadeUp {
           from {
             opacity: 0;
             transform: translateY(24px);
           }
-
           to {
             opacity: 1;
             transform: translateY(0);
@@ -371,7 +356,6 @@ export default function Home() {
           from {
             opacity: 0;
           }
-
           to {
             opacity: 1;
           }
@@ -380,9 +364,8 @@ export default function Home() {
         @keyframes exactFloat {
           0%,
           100% {
-            transform: translateY(0px);
+            transform: translateY(0);
           }
-
           50% {
             transform: translateY(-8px);
           }
@@ -394,7 +377,6 @@ export default function Home() {
             transform: scale(1);
             opacity: 0.55;
           }
-
           50% {
             transform: scale(1.12);
             opacity: 0.8;
@@ -412,7 +394,6 @@ export default function Home() {
             opacity: 0;
             transform: translateY(18px) scale(0.98);
           }
-
           to {
             opacity: 1;
             transform: translateY(0) scale(1);
@@ -429,10 +410,6 @@ export default function Home() {
 
         .exact-fade-up-delay-2 {
           animation: exactFadeUp 0.7s 0.24s ease-out both;
-        }
-
-        .exact-fade-in {
-          animation: exactFadeIn 0.8s ease-out both;
         }
 
         .exact-float {
@@ -455,7 +432,6 @@ export default function Home() {
           .exact-fade-up,
           .exact-fade-up-delay-1,
           .exact-fade-up-delay-2,
-          .exact-fade-in,
           .exact-float,
           .exact-glow,
           .exact-result,
@@ -468,37 +444,28 @@ export default function Home() {
       {/* HEADER */}
 
       <header className="sticky top-0 z-50 border-b border-[#ebe6f2] bg-white/90 backdrop-blur-xl">
-
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4">
 
           <a
             href="/"
             className="flex items-center gap-3 transition hover:scale-[1.02]"
           >
-
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-lg font-black text-white shadow-lg shadow-violet-200">
               K
             </div>
 
             <div>
-
               <div className="text-xl font-black tracking-tight">
-                Exact
-                <span className="text-violet-600">
-                  KB
-                </span>
+                Exact<span className="text-violet-600">KB</span>
               </div>
 
               <div className="hidden text-[10px] font-bold uppercase tracking-[0.2em] text-[#a29aaf] sm:block">
                 Image Compressor
               </div>
-
             </div>
-
           </a>
 
           <nav className="hidden items-center gap-8 text-sm font-medium text-[#766d80] md:flex">
-
             <a
               href="#how-it-works"
               className="transition hover:text-violet-600"
@@ -519,7 +486,6 @@ export default function Home() {
             >
               FAQ
             </a>
-
           </nav>
 
           <div className="rounded-full bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700">
@@ -527,9 +493,7 @@ export default function Home() {
           </div>
 
         </div>
-
       </header>
-
 
       {/* HERO */}
 
@@ -542,37 +506,26 @@ export default function Home() {
         <div className="relative z-10 mx-auto max-w-4xl text-center">
 
           <div className="exact-fade-up mb-6 inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-xs font-bold text-violet-700">
-
             <span className="h-2 w-2 animate-pulse rounded-full bg-violet-500" />
-
             Fast • Private • Simple
-
           </div>
 
           <h1 className="exact-fade-up-delay-1 text-4xl font-black leading-tight tracking-tight sm:text-6xl">
-
             Compress Images to
 
             <span className="block bg-gradient-to-r from-violet-600 via-purple-600 to-fuchsia-500 bg-clip-text text-transparent">
-
               the Exact Size You Need
-
             </span>
-
           </h1>
 
           <p className="exact-fade-up-delay-2 mx-auto mt-6 max-w-2xl text-base leading-7 text-[#746b7d] sm:text-lg">
-
             Reduce JPG, PNG and WebP images to your required
             KB size. No registration, no software installation,
             and no complicated settings.
-
           </p>
 
         </div>
-
       </section>
-
 
       {/* COMPRESSOR */}
 
@@ -634,13 +587,11 @@ export default function Home() {
                   />
 
                   <div className="mt-6 flex items-center justify-center gap-3 text-xs text-[#aaa1b2]">
-
                     <span>JPG</span>
                     <span>•</span>
                     <span>PNG</span>
                     <span>•</span>
                     <span>WebP</span>
-
                   </div>
 
                 </div>
@@ -660,7 +611,6 @@ export default function Home() {
                       </div>
 
                       <div className="min-w-0">
-
                         <p className="truncate font-bold">
                           {file.name}
                         </p>
@@ -669,7 +619,6 @@ export default function Home() {
                           Original size:{" "}
                           {formatBytes(file.size)}
                         </p>
-
                       </div>
 
                     </div>
@@ -682,7 +631,6 @@ export default function Home() {
                     </button>
 
                   </div>
-
 
                   {/* TARGET */}
 
@@ -725,7 +673,6 @@ export default function Home() {
 
                     </div>
 
-
                     <div className="mt-5">
 
                       <label className="mb-2 block text-sm font-bold text-[#6e6477]">
@@ -745,7 +692,7 @@ export default function Home() {
                             setResult(null);
                           }}
                           placeholder="Enter size, e.g. 150"
-                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-4 pr-16 outline-none transition focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
+                          className="w-full rounded-xl border border-[#e2dce8] bg-white px-4 py-4 pr-16 outline-none transition placeholder:text-[#b0a7b5] focus:border-violet-500 focus:ring-4 focus:ring-violet-100"
                         />
 
                         <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm font-bold text-[#aaa1b0]">
@@ -753,11 +700,9 @@ export default function Home() {
                         </span>
 
                       </div>
-
                     </div>
 
                   </div>
-
 
                   {/* BUTTON */}
 
@@ -777,7 +722,6 @@ export default function Home() {
 
                   </button>
 
-
                   {/* ERROR */}
 
                   {error && (
@@ -785,7 +729,6 @@ export default function Home() {
                       {error}
                     </div>
                   )}
-
 
                   {/* RESULT */}
 
@@ -806,7 +749,6 @@ export default function Home() {
                         <div className="mx-auto mt-6 flex max-w-md items-center justify-center gap-5">
 
                           <div>
-
                             <p className="text-xs font-semibold text-[#8d8492]">
                               Original
                             </p>
@@ -814,7 +756,6 @@ export default function Home() {
                             <p className="mt-1 font-black">
                               {formatBytes(file.size)}
                             </p>
-
                           </div>
 
                           <div className="text-xl text-[#b4abb9]">
@@ -822,7 +763,6 @@ export default function Home() {
                           </div>
 
                           <div>
-
                             <p className="text-xs font-semibold text-[#8d8492]">
                               Compressed
                             </p>
@@ -830,7 +770,6 @@ export default function Home() {
                             <p className="mt-1 font-black text-emerald-600">
                               {formatBytes(resultSize)}
                             </p>
-
                           </div>
 
                         </div>
@@ -867,7 +806,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* FEATURES */}
 
@@ -942,7 +880,6 @@ export default function Home() {
 
       </section>
 
-
       {/* HOW IT WORKS */}
 
       <section
@@ -1009,7 +946,6 @@ export default function Home() {
 
       </section>
 
-
       {/* FAQ */}
 
       <section
@@ -1033,8 +969,7 @@ export default function Home() {
 
           <div className="mt-10 space-y-4">
 
-            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
-
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
               <summary className="cursor-pointer list-none font-black">
                 Is ExactKB free?
               </summary>
@@ -1043,12 +978,9 @@ export default function Home() {
                 Yes. ExactKB is designed as a free
                 image compression tool.
               </p>
-
             </details>
 
-
-            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
-
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
               <summary className="cursor-pointer list-none font-black">
                 Are my images uploaded to a server?
               </summary>
@@ -1057,12 +989,9 @@ export default function Home() {
                 No. The current compression process
                 runs directly in your browser.
               </p>
-
             </details>
 
-
-            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
-
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
               <summary className="cursor-pointer list-none font-black">
                 What image formats are supported?
               </summary>
@@ -1071,12 +1000,9 @@ export default function Home() {
                 JPG, JPEG, PNG and WebP images
                 are supported.
               </p>
-
             </details>
 
-
-            <details className="group rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
-
+            <details className="rounded-2xl border border-[#ebe5f0] bg-[#fcfaff] p-5 transition hover:border-violet-200">
               <summary className="cursor-pointer list-none font-black">
                 Can I choose a custom KB size?
               </summary>
@@ -1085,7 +1011,6 @@ export default function Home() {
                 Yes. Enter your preferred target
                 size in the custom KB field.
               </p>
-
             </details>
 
           </div>
@@ -1093,7 +1018,6 @@ export default function Home() {
         </div>
 
       </section>
-
 
       {/* FOOTER */}
 
@@ -1119,7 +1043,6 @@ export default function Home() {
 
             </div>
 
-
             <div>
 
               <h3 className="text-sm font-black">
@@ -1133,6 +1056,20 @@ export default function Home() {
                   className="block text-[#817787] transition hover:text-violet-600"
                 >
                   Image Compressor
+                </a>
+
+                <a
+                  href="/passport-photo"
+                  className="block text-[#817787] transition hover:text-violet-600"
+                >
+                  Passport Photo
+                </a>
+
+                <a
+                  href="/background-remover"
+                  className="block text-[#817787] transition hover:text-violet-600"
+                >
+                  Background Remover
                 </a>
 
                 <a
@@ -1160,7 +1097,6 @@ export default function Home() {
 
             </div>
 
-
             <div>
 
               <h3 className="text-sm font-black">
@@ -1186,7 +1122,6 @@ export default function Home() {
               </div>
 
             </div>
-
 
             <div>
 
@@ -1215,7 +1150,6 @@ export default function Home() {
             </div>
 
           </div>
-
 
           <div className="mt-10 flex flex-col gap-3 border-t border-[#e8e2ed] pt-6 text-sm text-[#968c9d] sm:flex-row sm:items-center sm:justify-between">
 
