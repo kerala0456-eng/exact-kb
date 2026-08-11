@@ -42,12 +42,40 @@ export default function RootLayout({
       <body>
         {children}
 
+        {/* Google AdSense */}
         <Script
           async
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8535461702596029"
           crossOrigin="anonymous"
           strategy="afterInteractive"
         />
+
+        {/* PWA Service Worker */}
+        <Script
+          id="register-service-worker"
+          strategy="afterInteractive"
+        >
+          {`
+            if ("serviceWorker" in navigator) {
+              window.addEventListener("load", function () {
+                navigator.serviceWorker
+                  .register("/sw.js")
+                  .then(function (registration) {
+                    console.log(
+                      "ExactKB Service Worker registered:",
+                      registration.scope
+                    );
+                  })
+                  .catch(function (error) {
+                    console.error(
+                      "ExactKB Service Worker registration failed:",
+                      error
+                    );
+                  });
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   );
